@@ -45,4 +45,5 @@ jobs:
       with:
         tag_name: latest
         files:
-          release.zip
+          ./release.zip
+        working-directory: /
