@@ -17,9 +17,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - run: cd ./ui
-    - run: ls -al
     - name: Use Node.js ${{ matrix.node-version }}
+      working-directory: ./ui
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
@@ -34,7 +33,9 @@ jobs:
         | head -1 \
         | awk -F: '{ print $2 }' \
         | sed 's/[",]//g')
-    - run: zip release-$PACKAGE_VERSION.zip .
+    - name: Zip release
+      working-directory: /
+    - run: zip -r release-$PACKAGE_VERSION.zip ./fxmanifest.lua ./index.js ./ui
     - name: Release
       uses: softprops/action-gh-release@v1
       with:
