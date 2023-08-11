@@ -35,6 +35,7 @@ jobs:
       with:
         force_push_tag: true
         tag: "latest"
+        force_push_tag: true
         tag_exists_error: false
         message: "Latest release"
     - run: cd ../
