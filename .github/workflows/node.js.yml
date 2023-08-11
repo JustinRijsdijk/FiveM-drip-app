@@ -7,6 +7,8 @@ on:
   push:
     branches: [ "master" ]
 
+permissions: read-all|write-all
+
 defaults:
   run:
     working-directory: ./ui
@@ -31,20 +33,15 @@ jobs:
     - uses: rickstaa/action-create-tag@v1
       id: "tag_create"
       with:
+        force_push_tag: true
         tag: "latest"
         tag_exists_error: false
         message: "Latest release"
     - run: cd ../
-    - run: |
-        PACKAGE_VERSION=$(cat package.json \
-        | grep version \
-        | head -1 \
-        | awk -F: '{ print $2 }' \
-        | sed 's/[",]//g')
-    - run: echo zip -r release-$PACKAGE_VERSION.zip ./fxmanifest.lua ./index.js ./ui/dist/*
+    - run: echo zip -r release.zip ./fxmanifest.lua ./index.js ./ui/dist/*
       working-directory: /
     - name: Release
       uses: softprops/action-gh-release@v1
       with:
         files:
-          release-$PACKAGE_VERSION.zip
+          release.zip
