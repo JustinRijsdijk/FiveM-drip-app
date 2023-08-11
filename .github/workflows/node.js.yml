@@ -18,11 +18,12 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Use Node.js ${{ matrix.node-version }}
-      working-directory: ./ui
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+    - run: ls -al
+      working-directory: ./ui
     - run: npm ci
     - run: npm run build --if-present
     - run: find ! \( -name  'dist' \) -exec rm -r {} +
@@ -33,7 +34,6 @@ jobs:
         | head -1 \
         | awk -F: '{ print $2 }' \
         | sed 's/[",]//g')
-    - name: Zip release
       working-directory: /
     - run: zip -r release-$PACKAGE_VERSION.zip ./fxmanifest.lua ./index.js ./ui
     - name: Release
