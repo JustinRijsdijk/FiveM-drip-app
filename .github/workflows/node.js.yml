@@ -36,10 +36,10 @@ jobs:
         | head -1 \
         | awk -F: '{ print $2 }' \
         | sed 's/[",]//g')
-    - run: zip -r release-$PACKAGE_VERSION.zip ./fxmanifest.lua ./index.js ./ui/dist/*
+    - run: zip -r release-${PACKAGE_VERSION}.zip ./fxmanifest.lua ./index.js ./ui/dist/*
       working-directory: /
     - name: Release
       uses: softprops/action-gh-release@v1
       with:
         files:
-          release-$PACKAGE_VERSION.zip
+          release-${PACKAGE_VERSION}.zip
