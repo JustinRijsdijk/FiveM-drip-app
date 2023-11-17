@@ -39,10 +39,11 @@ jobs:
         tag_exists_error: false
         message: "Latest release"
     - run: ls -al
-    - run: echo zip -r release.zip ./fxmanifest.lua ./index.js ./ui/dist/*
-    - run: ls -al
     - name: Release
       uses: softprops/action-gh-release@v1
       with:
         tag_name: latest
-        files: ./release.zip
+    - uses: vimtor/action-zip@v1.1
+      with:
+        files: fxmanifest.lua index.js ui/dist
+        dest: result.zip
