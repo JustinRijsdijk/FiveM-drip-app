@@ -46,8 +46,8 @@ jobs:
       working-directory: ./ui
     - uses: vimtor/action-zip@v1.1
       with:
-        recursive: false
-        files: fxmanifest.lua index.js ui/dist
+        recursive: true
+        files: fxmanifest.lua index.js ui ui/dist
         dest: release.zip
     - name: Release
       uses: softprops/action-gh-release@v1
