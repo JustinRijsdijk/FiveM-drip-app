@@ -39,10 +39,7 @@ jobs:
         tag_exists_error: false
         message: "Latest release"
     - run: ls -al
-      working-directory: /
     - run: echo zip -r release.zip ./fxmanifest.lua ./index.js ./ui/dist/*
-    - run: ls -al
-      working-directory: /
     - name: Release
       uses: softprops/action-gh-release@v1
       with:
