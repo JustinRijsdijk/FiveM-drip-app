@@ -40,6 +40,7 @@ jobs:
         message: "Latest release"
     - run: ls -al
     - run: echo zip -r release.zip ./fxmanifest.lua ./index.js ./ui/dist/*
+    - run: ls -al
     - name: Release
       uses: softprops/action-gh-release@v1
       with:
