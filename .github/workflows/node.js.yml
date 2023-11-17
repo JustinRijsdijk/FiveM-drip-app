@@ -42,14 +42,13 @@ jobs:
         shopt -s extglob
         rm -rf !(dist)
       working-directory: ./ui
-    - run: ls -al
+    - run: rm -rf .eslintrc.cjs .gitignore .vscode
       working-directory: ./ui
     - uses: vimtor/action-zip@v1.1
       with:
         recursive: false
-        files: fxmanifest.lua index.js ui ui/dist ui/dist/**/**
+        files: fxmanifest.lua index.js ui ui/dist
         dest: release.zip
-    - run: ls -al
     - name: Release
       uses: softprops/action-gh-release@v1
       with:
