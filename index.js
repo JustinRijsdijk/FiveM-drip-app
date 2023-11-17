@@ -3,9 +3,9 @@
  */
 const config = {
     allowedVehicleModels: [
-        'spawnnaam1',
-        'spawnnaam2',
-        'rws'
+        // replace with your vehicle model names
+        'rws1',
+        'rws2',
     ]
 }
 

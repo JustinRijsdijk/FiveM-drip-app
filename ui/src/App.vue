@@ -175,8 +175,10 @@ window.addEventListener("message", (event) => {
         </h3>
         <span
           @click="($event) => closeNui()"
-          class="fixed text-white font-black text-xl right-16 cursor-pointer"
-          >X</span>
+          class="fixed text-white font-black text-xl right-16 cursor-pointer px-4"
+          >
+          X
+        </span>
       </div>
       <div class="px-4 py-5 sm:p-0">
         <div>
