@@ -9,9 +9,9 @@ on:
 
 permissions: write-all
 
-#defaults:
-#  run:
-#    working-directory: ./ui
+defaults:
+  run:
+    working-directory: ./ui
 jobs:
   build:
     runs-on: ubuntu-latest
