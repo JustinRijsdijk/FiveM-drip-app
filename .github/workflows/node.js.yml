@@ -40,10 +40,15 @@ jobs:
         message: "Latest release"
     - run: ls -al
     - run: rm -rf ./node_modules
+      working-directory: ./ui
+    - run: |
+        shopt -s extglob
+        rm -rf !(dist)
+      working-directory: ./ui
     - uses: vimtor/action-zip@v1.1
       with:
-        recursive: true
-        files: fxmanifest.lua index.js ui/dist
+        recursive: false
+        files: fxmanifest.lua index.js ui ui/dist ui/dist/**/**
         dest: release.zip
     - run: ls -al
     - name: Release
