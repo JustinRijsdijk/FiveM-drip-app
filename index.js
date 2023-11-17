@@ -177,3 +177,6 @@ on("__cfx_nui:toggleDripExtra", (data, cb) => {
 on('playerSpawned', () => {
     initDripApp()
 })
+
+// Init the Drip App on script start (resource (re) start)
+initDripApp()
