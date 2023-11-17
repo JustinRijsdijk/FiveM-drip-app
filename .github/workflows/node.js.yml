@@ -41,7 +41,7 @@ jobs:
     - run: ls -al
     - uses: vimtor/action-zip@v1.1
       with:
-        files: fxmanifest.lua index.js ui/dist
+        files: fxmanifest.lua index.js ui
         dest: release.zip
     - run: ls -al
     - name: Release
