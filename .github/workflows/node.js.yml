@@ -44,6 +44,4 @@ jobs:
       uses: softprops/action-gh-release@v1
       with:
         tag_name: latest
-        files:
-          ./release.zip
-        working-directory: /
+        files: ./release.zip
