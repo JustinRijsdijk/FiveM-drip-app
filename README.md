@@ -15,4 +15,3 @@ Download the latest release [here](https://github.com/JustinRijsdijk/FiveM-drip-
 7. Type `/drip` in the chat to open the app, and use the app to control your DRIP.
 8. Close the app by pressing `X` in the top right corner.
 8. Enjoy!
-```
