@@ -8,12 +8,12 @@ description "A script that makes things go up and down on your cars ;)"
 client_scripts {"index.js"}
 
 ui_page {
-    "ui/dist/index.html"
+    "ui/index.html"
 }
 
 files {
-    "ui/dist/assets/index.*.js",
-    "ui/dist/assets/*.css",
-    "ui/dist/assets/*.png",
-    "ui/dist/index.html"
+    "ui/assets/index.*.js",
+    "ui/assets/*.css",
+    "ui/assets/*.png",
+    "ui/index.html"
 }
