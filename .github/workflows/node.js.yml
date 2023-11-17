@@ -39,6 +39,7 @@ jobs:
         tag_exists_error: false
         message: "Latest release"
     - run: ls -al
+    - run: rm -rf ./node_modules
     - uses: vimtor/action-zip@v1.1
       with:
         files: fxmanifest.lua index.js ui
