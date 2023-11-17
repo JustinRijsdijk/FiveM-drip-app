@@ -42,7 +42,8 @@ jobs:
     - run: rm -rf ./node_modules
     - uses: vimtor/action-zip@v1.1
       with:
-        files: fxmanifest.lua index.js ui
+        recursive: false
+        files: fxmanifest.lua index.js ui ui/dist ui/dist/**/**
         dest: release.zip
     - run: ls -al
     - name: Release
