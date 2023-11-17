@@ -47,3 +47,4 @@ jobs:
       with:
         files: fxmanifest.lua index.js ui/dist
         dest: result.zip
+    - run: ls -al
