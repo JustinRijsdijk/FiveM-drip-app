@@ -1,3 +1,4 @@
 ./ui/node_modules/
 /.idea/
 /.vscode/
+config.json

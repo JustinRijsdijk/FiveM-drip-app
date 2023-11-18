@@ -1,0 +1,10 @@
+{
+    "allowedVehicleModels": [
+        "rws1",
+        "rws2"
+    ],
+    "canControlOutsideOfVehicle": true,
+    "restrictOutsideControlToRange": false,
+    "allowedDripRange": 0.5,
+    "passengerCanControlDrip": false
+}
