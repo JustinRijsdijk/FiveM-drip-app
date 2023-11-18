@@ -34,7 +34,7 @@ if(!config) {
     /**
      * Register event handler for all known errors.
      */
-    config.translations.errors.array.forEach((element, key) => {
+    Object.keys(config.translations.errors).forEach((key) => {
         onNet(`${config.eventPrefix}:error:${key}`, (message) => {
             // Run something on an error, for example, show OkOkNotify alert. 
             exports.okokNotify.Alert(message, 10000, 'success')

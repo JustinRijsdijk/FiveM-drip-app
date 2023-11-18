@@ -223,15 +223,8 @@ const initDripApp = () => {
     getPedAndVehicle()
 
     // Initialize the app
-    const translation = replaceVariablesInString(config.translation.appInitialized, {
-        "commandName": config.commandName
-    })
-    console.log(translation)
-    sendEvent(`success:initialized`, translation)
-
-    // initialize command hint
     setImmediate(() => {
-        emit('chat:addSuggestion', `/${config.commandName}`, config.translation.commandHint);
+        emit('chat:addSuggestion', `/${config.commandName}`, config.translations.commandHint);
       });
 
     /**
@@ -298,6 +291,13 @@ const initDripApp = () => {
         }
         error("notAllowedVehicleModel")
     })
+
+    // App is initialized, send event to client
+    const translation = replaceVariablesInString(config.translations.appInitialized, {
+        "commandName": config.commandName
+    })
+    console.log(translation)
+    sendEvent(`success:initialized`, translation)
 }
 
 // Init the Drip App on script start (resource (re) start)

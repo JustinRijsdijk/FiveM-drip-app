@@ -10,7 +10,7 @@
     "passengerCanControlDrip": false,
     "eventPrefix": "drip",
     "translations": {
-        "AppInitiated": "Drip App has been initiated. You can use it by typing /{commandName}.",
+        "appInitialized": "Drip App has been initiated. You can use it by typing /{commandName}.",
         "commandHint": "Open the DRIP App to control your DRIP.",
         "errors": {
             "notInVehicle": "You must be in a vehicle to use this command.",
