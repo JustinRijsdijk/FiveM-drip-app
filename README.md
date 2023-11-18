@@ -17,6 +17,21 @@ Download the latest release [Here](https://github.com/JustinRijsdijk/FiveM-drip-
 8. Close the app by pressing `X` in the top right corner.
 8. Enjoy!
 
+## Events
+The DRIP App sends out an assortment of events. You can enable those, and hook into them, by calling your desired (exported) functions, or by listening to them directly.
+You can call (exported) functions by copying the `events.example.js` to `events.js` and by uncommenting the `events.js` entry inside of the `client_scripts` object in the `fxmanifest.lua`.
+
+Or listen to one of the following netEvents. All events are prefixed with the confifurable `eventPrefix`
+
+| Event Name | Description |
+|------------|-------------|
+| `${eventPrefix:success:initialized}`   | Is fired when the resource is correctly initialized. |
+| `${eventPrefix:error:*`   | Is fired if somewhere in the script, a known error has occured. Known errors can be found inside the `translations.errors` key in the config file |
+
+## Exports
+This resource exposes one export function called `toggleDrip`.
+Read more about how to use this export [at](https://docs.fivem.net/docs/scripting-manual/runtimes/javascript/#using-exports)
+
 ## Configuration
 The DRIP App supports a couple of configurable options at this time.
 
@@ -27,3 +42,4 @@ The DRIP App supports a couple of configurable options at this time.
 | restrictOutsideControlToRange | Boolean | Determines if you should be in a certain range of the vehicle to control the DRIP from outside. Applies to passengers if allowed. |
 | allowedDripRange              | Number  | The range in which you need to be to use the DRIP from outside of the vehicle. Applies to passengers if allowed.    |
 | passengerCanControlDrip       | Boolean | Determines if a passenger is allowed to control the DRIP of a vehicle.                                              |
+| eventPrefix | String | The prefix of the netEvents emitted by the DRIP App resource. |

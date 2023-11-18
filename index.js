@@ -1,9 +1,4 @@
 /**
- * CONFIG:
- */
-let config = JSON.parse(LoadResourceFile(GetCurrentResourceName(), 'config.json'));
-
-/**
  * IF YOU DO NOT KNOW WHAT YOU ARE DOING
  * DO NOT CHANGE ANYTHING BELOW HERE.
  * IF YOU DO, AND FUCK IT UP, CALL YOUR MOM AND CRY.
@@ -14,6 +9,51 @@ let vehicle = null
 let dripAppIsOpen = false;
 let activeExtra = null
 let allowedVehicleModels = []
+
+/**
+ * CONFIG:
+ */
+let config = JSON.parse(LoadResourceFile(GetCurrentResourceName(), 'config.json'));
+
+/**
+ * 
+ * @param {*} str 
+ * @param {*} context 
+ * @returns String
+ */
+function replaceVariablesInString(str, context) {
+    return str.replace(/\{(\w+)\}/g, function(match, variable) {
+        return context[variable] || match;
+    });
+}
+
+/**
+ * Emits a netEvent with the configured prefix
+ * 
+ * @param {*} eventName 
+ * @param {*} payload 
+ */
+const sendEvent = (eventName, payload) => {
+    emitNet(`${config.eventPrefix ?? 'drip'}:${eventName}`, payload)
+}
+
+/**
+ * Reports the error, and emits a netEvent using sendEvent()
+ * 
+ * @param {*} errorName 
+ * @param {*} context 
+ */
+const error = (errorName, context = null) => {
+    let translation = config?.translation?.error[errorName] ?? errorName
+
+    if(context) {
+        translation = replaceVariablesInString(translation, context)
+    }
+
+    console.error(translation)
+
+    sendEvent(`error:${errorName}`, translation)
+}
 
 /**
  * Set local PED and VEHICLE entities.
@@ -39,7 +79,7 @@ const getPedAndVehicle = () => {
     // Check if the player ped is in the driver's seat
     if (!config.passengerCanControlDrip && GetPedInVehicleSeat(vehicle, -1) != ped) {
         vehicle = null
-        console.error("You are not allowed to control the DRIP if you are a passenger")
+        error("passengerNotAllowed")
         return false;
     }
 
@@ -64,7 +104,9 @@ const isPlayerInRangeOfVehicle = () => {
     }
 
     if(!parseFloat(config.allowedDripRange)) {
-        console.error('Config value for allowedDripRange is not a number. Enabling Drip control anyways.')
+        error("notAllowedOutsideControlRange", {
+            "range": config.allowedDripRange
+        })
         return true
     }
     
@@ -101,6 +143,9 @@ const raiseDRIP = () =>
     )
 }
 
+/**
+ * Resets the active extra, if there is one.
+ */
 const resetActiveExtra = () => {
     if(activeExtra) {
         if(IsVehicleExtraTurnedOn(vehicle, activeExtra)) {
@@ -112,13 +157,20 @@ const resetActiveExtra = () => {
     return
 }
 
+/**
+ * Toggles the given extra on the current vehicle. if the extra is already active, it will be reset.
+ * 
+ * @param {*} extra 
+ */
 const toggleDripExtra = (extra) => {
     if(!getPedAndVehicle()) {
         return false
     }
 
     if(!DoesExtraExist(vehicle, extra)) {
-        console.log(`extra ${extra} does not exist on the current vehicle`)
+        error("extraDoesNotExist", {
+            "extra": extra
+        })
         return
     }
 
@@ -156,7 +208,9 @@ const toggleDripApp = (forceClose = false) =>
 const initDripApp = () => {
     // Load config file
     if(!config) {
+        // Seems a bit ambogious, but here the config is not loaded yet, so we can't use the error() function
         console.error('No config file found. Please make sure you have a config.json file in your resource folder.')
+        sendEvent(`error:noConfigFileFound`, `No config file found. Please make sure you have a config.json file in your resource folder.`)
         return
     }
 
@@ -169,66 +223,82 @@ const initDripApp = () => {
     getPedAndVehicle()
 
     // Initialize the app
-    console.log('Drip App has been initiated. You can use it by typing \'/drip\'')
+    const translation = replaceVariablesInString(config.translation.appInitialized, {
+        "commandName": config.commandName
+    })
+    console.log(translation)
+    sendEvent(`success:initialized`, translation)
+
     // initialize command hint
     setImmediate(() => {
-        emit('chat:addSuggestion', '/drip', 'Open the DRIP app to control your Drip.');
+        emit('chat:addSuggestion', `/${config.commandName}`, config.translation.commandHint);
       });
+
+    /**
+     * Register command to open the Drip App
+     */
+    RegisterCommand(config.commandName, (source, args) => { 
+        if(!getPedAndVehicle()) {
+            return false
+        }
+
+        if(allowedVehicleModels.includes(GetEntityModel(vehicle))) {
+            return toggleDripApp()
+        }
+        error("notAllowedVehicleModel")
+    })
+
+    /**
+     * Register NUI Callback to close the Drip App
+     */
+    RegisterNuiCallbackType("close");
+    on("__cfx_nui:close", (data, cb) => {
+        toggleDripApp(true)
+
+        return cb()
+    })
+
+    /**
+     * Register NUI Callback to raise the Drip
+     */
+    RegisterNuiCallbackType("raiseDrip");
+    on("__cfx_nui:raiseDrip", (data, cb) => {
+        raiseDRIP()
+
+        return cb()
+    })
+
+    /**
+     * Register NUI Callback to lower the Drip
+     */
+    RegisterNuiCallbackType("lowerDrip");
+    on("__cfx_nui:lowerDrip", (data, cb) => {
+        lowerDRIP()
+
+        return cb()
+    })
+
+    /**
+     * Register NUI Callback to toggel Drip extra
+     */
+    RegisterNuiCallbackType("toggleDripExtra");
+    on("__cfx_nui:toggleDripExtra", (data, cb) => {
+        toggleDripExtra(data.extra)
+
+        return cb()
+    })
+
+    exports("toggleDrip", () => {
+        if(!getPedAndVehicle()) {
+            return false
+        }
+
+        if(allowedVehicleModels.includes(GetEntityModel(vehicle))) {
+            return toggleDripApp()
+        }
+        error("notAllowedVehicleModel")
+    })
 }
-
-/**
- * Register command to open the Drip App
- */
-RegisterCommand("drip", (source, args) => { 
-    if(!getPedAndVehicle()) {
-        return false
-    }
-
-    if(allowedVehicleModels.includes(GetEntityModel(vehicle))) {
-        return toggleDripApp()
-    }
-    console.error('Current vehicle is not whitelisted')
-})
-
-/**
- * Register NUI Callback to close the Drip App
- */
-RegisterNuiCallbackType("close");
-on("__cfx_nui:close", (data, cb) => {
-    toggleDripApp(true)
-
-    return cb()
-})
-
-/**
- * Register NUI Callback to raise the Drip
- */
-RegisterNuiCallbackType("raiseDrip");
-on("__cfx_nui:raiseDrip", (data, cb) => {
-    raiseDRIP()
-
-    return cb()
-})
-
-/**
- * Register NUI Callback to lower the Drip
- */
-RegisterNuiCallbackType("lowerDrip");
-on("__cfx_nui:lowerDrip", (data, cb) => {
-    lowerDRIP()
-
-    return cb()
-})
-
-/**
- * Register NUI Callback to toggel Drip extra
- */
-RegisterNuiCallbackType("toggleDripExtra");
-on("__cfx_nui:toggleDripExtra", (data, cb) => {
-    toggleDripExtra(data.extra)
-
-    return cb()
-})
 
 // Init the Drip App on script start (resource (re) start)
 initDripApp()

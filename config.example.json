@@ -1,4 +1,5 @@
 {
+    "commandName":"drip",
     "allowedVehicleModels": [
         "rws1",
         "rws2"
@@ -6,5 +7,18 @@
     "canControlOutsideOfVehicle": true,
     "restrictOutsideControlToRange": false,
     "allowedDripRange": 0.5,
-    "passengerCanControlDrip": false
+    "passengerCanControlDrip": false,
+    "eventPrefix": "drip",
+    "translations": {
+        "AppInitiated": "Drip App has been initiated. You can use it by typing /{commandName}.",
+        "commandHint": "Open the DRIP App to control your DRIP.",
+        "errors": {
+            "notInVehicle": "You must be in a vehicle to use this command.",
+            "notAllowedVehicle": "You are not allowed to use this command in this vehicle.",
+            "passengerNotAllowed": "You are not allowed to use this command as a passenger.",
+            "extraDoesNotExistOnVehicle": "The vehicle does not have an extra with the name {extra}.",
+            "notAllowedOutsideControl": "You are not allowed to use this command outside of the vehicle.",
+            "notAllowedOutsideControlRange": "You are not allowed to use this command outside of the vehicle. You must be within {range} meters of the vehicle."
+        }
+    }
 }
