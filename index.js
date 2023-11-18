@@ -271,7 +271,7 @@ const initDripApp = () => {
         if(allowedVehicleModels.includes(GetEntityModel(vehicle))) {
             return toggleDripApp()
         }
-        error("notAllowedVehicleModel")
+        error("notAllowedVehicle")
     })
 
     /**
@@ -322,7 +322,7 @@ const initDripApp = () => {
         if(allowedVehicleModels.includes(GetEntityModel(vehicle))) {
             return toggleDripApp()
         }
-        error("notAllowedVehicleModel")
+        error("notAllowedVehicle")
     })
 
     // App is initialized, send event to client
