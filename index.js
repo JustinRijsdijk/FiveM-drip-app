@@ -97,16 +97,23 @@ const getPedAndVehicle = () => {
     // Get the local PED
     ped = GetPlayerPed(-1)
 
+    // Vehichle is not allowed, return false
+    if(!allowedVehicleModels.includes(GetEntityModel(GetVehiclePedIsIn(ped, true)))) {
+        error("notAllowedVehicle")
+        return false
+    }
+
     // If you are allowed to control the DRIP from the outside of the vehicle
     // And you have a vehicle registred, and you are currently not in (another) vehicle
     // Do not try to get and set the vehicle again.
-    if (config?.canControlOutsideOfVehicle && vehicle) {
+    if (config?.canControlOutsideOfVehicle && vehicle && GetVehiclePedIsIn(ped, true) !== vehicle) {
         return isPlayerInRangeOfVehicle()
     } else {
         vehicle = GetVehiclePedIsIn(ped, true)
     }
 
     if (!vehicle) {
+        error("notInVehicle")
         return false
     }
 
@@ -268,9 +275,8 @@ const initDripApp = () => {
             return false
         }
 
-        if(allowedVehicleModels.includes(GetEntityModel(vehicle))) {
-            return toggleDripApp()
-        }
+        return toggleDripApp()
+
         error("notAllowedVehicle")
     })
 
