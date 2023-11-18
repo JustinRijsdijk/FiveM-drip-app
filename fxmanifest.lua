@@ -6,8 +6,7 @@ author "Kip Als Hoed"
 description "A script that gives you a nice UI and makes things go up and down on your cars ;)"
 
 client_scripts {
-    "index.js",
-    -- "events.js"
+    "index.js"
 }
 
 ui_page {

@@ -1,3 +1,40 @@
+
+/**
+ * CONFIG. DO NOT CHANGE ANYTHING HERE.
+ */
+const config = JSON.parse(LoadResourceFile(GetCurrentResourceName(), 'config.json'));
+
+/**
+ * EVENT LISTENERS. ADD YOUR OWN HOOKS HERE IF YOU WANT TO.
+ */
+on('onResourceStart', (resourceName) => {
+    /**
+     * Register event handler for the noConfigFileFound error.
+     */
+    on(`drip:error:noConfigFileFound`, (message) => {
+        // Run something on noConfigFileFound error, for example, show OkOkNotify alert. 
+        exports.okokNotify.Alert(message, 10000, 'error')
+    })
+
+    /**
+     * Register event handler for the successfull Initialized event.
+     */
+    on(`${config?.eventPrefix ?? 'drip'}:success:initialized`, (message) => {
+        // Run something on successfull initialize, for example, show OkOkNotify alert.
+        exports.okokNotify.Alert(message, 10000, 'success')
+    })
+
+    /**
+     * Register event handler for all known errors.
+     */
+    Object.keys(config?.translations?.errors).forEach((key) => {
+        on(`${config?.eventPrefix ?? 'drip'}:error:${key}`, (message) => {
+            // Run something on an error, for example, show OkOkNotify alert. 
+            exports.okokNotify.Alert(message, 10000, 'success')
+        })
+    });
+});
+
 /**
  * IF YOU DO NOT KNOW WHAT YOU ARE DOING
  * DO NOT CHANGE ANYTHING BELOW HERE.
@@ -9,11 +46,6 @@ let vehicle = null
 let dripAppIsOpen = false;
 let activeExtra = null
 let allowedVehicleModels = []
-
-/**
- * CONFIG:
- */
-let config = JSON.parse(LoadResourceFile(GetCurrentResourceName(), 'config.json'));
 
 /**
  * 
@@ -34,7 +66,7 @@ function replaceVariablesInString(str, context) {
  * @param {*} payload 
  */
 const sendEvent = (eventName, payload) => {
-    emitNet(`${config.eventPrefix ?? 'drip'}:${eventName}`, payload)
+    emit(`${config.eventPrefix ?? 'drip'}:${eventName}`, payload)
 }
 
 /**
@@ -76,8 +108,8 @@ const getPedAndVehicle = () => {
         return false
     }
 
-    // Check if the player ped is in the driver's seat
-    if (!config.passengerCanControlDrip && GetPedInVehicleSeat(vehicle, -1) != ped) {
+    // Check if the player ped is in the driver's seat, only if ped is in a vehicle
+    if (!config.passengerCanControlDrip && GetPedInVehicleSeat(vehicle, -1) != ped && GetVehiclePedIsIn(ped, true)) {
         vehicle = null
         error("passengerNotAllowed")
         return false;
