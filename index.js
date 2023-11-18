@@ -2,7 +2,7 @@
 /**
  * config?. DO NOT CHANGE ANYTHING HERE.
  */
-const config = JSON.parse(LoadResourceFile(GetCurrentResourceName(), 'config?.json'));
+const config = JSON.parse(LoadResourceFile(GetCurrentResourceName(), 'config.json'));
 
 /**
  * EVENT LISTENERS. ADD YOUR OWN HOOKS HERE IF YOU WANT TO.
@@ -78,7 +78,7 @@ const sendEvent = (eventName, payload) => {
  * @param {*} context 
  */
 const error = (errorName, context = null) => {
-    let translation = config?.translation?.error[errorName] ?? errorName
+    let translation = config?.translations?.errors[errorName] ?? errorName
 
     if(context) {
         translation = replaceVariablesInString(translation, context)
@@ -111,7 +111,7 @@ const getPedAndVehicle = () => {
     }
 
     // Check if the player ped is in the driver's seat, only if ped is in a vehicle
-    if (!config?.passengerCanControlDrip && GetPedInVehicleSeat(vehicle, -1) != ped && vehicle) {
+    if (!config?.passengerCanControlDrip && GetPedInVehicleSeat(vehicle, -1) != ped && (vehicle || GetVehiclePedIsIn(ped, true))) {
         error("passengerNotAllowed")
         return false;
     }
