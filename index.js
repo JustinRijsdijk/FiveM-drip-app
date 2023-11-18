@@ -125,6 +125,7 @@ const initDripApp = () => {
  * Register command to open the Drip App
  */
 RegisterCommand("drip", (source, args) => {
+    getPedAndVehicle();
     if(allowedVehicleModels.includes(GetEntityModel(vehicle))) {
         return toggleDripApp()
     }
