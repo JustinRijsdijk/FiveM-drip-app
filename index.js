@@ -27,12 +27,14 @@ on('onResourceStart', (resourceName) => {
     /**
      * Register event handler for all known errors.
      */
-    Object.keys(config?.translations?.errors).forEach((key) => {
-        on(`${config?.eventPrefix ?? 'drip'}:error:${key}`, (message) => {
-            // Run something on an error, for example, show OkOkNotify alert. 
-            exports.okokNotify.Alert(message, 10000, 'success')
-        })
-    });
+    if(config?.translations?.errors?.length) {
+        Object.keys(config?.translations?.errors).forEach((key) => {
+            on(`${config?.eventPrefix ?? 'drip'}:error:${key}`, (message) => {
+                // Run something on an error, for example, show OkOkNotify alert. 
+                exports.okokNotify.Alert(message, 10000, 'success')
+            })
+        });
+    }
 });
 
 /**
@@ -66,7 +68,7 @@ function replaceVariablesInString(str, context) {
  * @param {*} payload 
  */
 const sendEvent = (eventName, payload) => {
-    emit(`${config.eventPrefix ?? 'drip'}:${eventName}`, payload)
+    emit(`${config?.eventPrefix ?? 'drip'}:${eventName}`, payload)
 }
 
 /**
@@ -98,7 +100,7 @@ const getPedAndVehicle = () => {
     // If you are allowed to control the DRIP from the outside of the vehicle
     // And you have a vehicle registred, and you are currently not in (another) vehicle
     // Do not try to get and set the vehicle again.
-    if (config.canControlOutsideOfVehicle && vehicle && !GetVehiclePedIsIn(ped, true)) {
+    if (config.canControlOutsideOfVehicle && vehicle) {
         return isPlayerInRangeOfVehicle()
     } else {
         vehicle = GetVehiclePedIsIn(ped, true)
@@ -109,8 +111,7 @@ const getPedAndVehicle = () => {
     }
 
     // Check if the player ped is in the driver's seat, only if ped is in a vehicle
-    if (!config.passengerCanControlDrip && GetPedInVehicleSeat(vehicle, -1) != ped && GetVehiclePedIsIn(ped, true)) {
-        vehicle = null
+    if (!config.passengerCanControlDrip && GetPedInVehicleSeat(vehicle, -1) != ped && vehicle) {
         error("passengerNotAllowed")
         return false;
     }

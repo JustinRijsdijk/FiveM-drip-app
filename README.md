@@ -18,8 +18,8 @@ Download the latest release [Here](https://github.com/JustinRijsdijk/FiveM-drip-
 8. Enjoy!
 
 ## Events
-The DRIP App sends out an assortment of events. You can enable those, and hook into them, by calling your desired (exported) functions, or by listening to them directly.
-You can call (exported) functions by copying the `events.example.js` to `events.js` and by uncommenting the `events.js` entry inside of the `client_scripts` object in the `fxmanifest.lua`.
+The DRIP App sends out an variety of events. You can enable those, and hook into them, by calling your desired (exported) functions, or by listening to them directly.
+You can call (exported) functions in the `index.js` file. On top there is a section where listeners are created.
 
 Or listen to one of the following netEvents. All events are prefixed with the confifurable `eventPrefix`
 
