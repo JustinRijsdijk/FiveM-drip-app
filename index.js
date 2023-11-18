@@ -1,8 +1,8 @@
 
 /**
- * CONFIG. DO NOT CHANGE ANYTHING HERE.
+ * config?. DO NOT CHANGE ANYTHING HERE.
  */
-const config = JSON.parse(LoadResourceFile(GetCurrentResourceName(), 'config.json'));
+const config = JSON.parse(LoadResourceFile(GetCurrentResourceName(), 'config?.json'));
 
 /**
  * EVENT LISTENERS. ADD YOUR OWN HOOKS HERE IF YOU WANT TO.
@@ -100,7 +100,7 @@ const getPedAndVehicle = () => {
     // If you are allowed to control the DRIP from the outside of the vehicle
     // And you have a vehicle registred, and you are currently not in (another) vehicle
     // Do not try to get and set the vehicle again.
-    if (config.canControlOutsideOfVehicle && vehicle) {
+    if (config?.canControlOutsideOfVehicle && vehicle) {
         return isPlayerInRangeOfVehicle()
     } else {
         vehicle = GetVehiclePedIsIn(ped, true)
@@ -111,7 +111,7 @@ const getPedAndVehicle = () => {
     }
 
     // Check if the player ped is in the driver's seat, only if ped is in a vehicle
-    if (!config.passengerCanControlDrip && GetPedInVehicleSeat(vehicle, -1) != ped && vehicle) {
+    if (!config?.passengerCanControlDrip && GetPedInVehicleSeat(vehicle, -1) != ped && vehicle) {
         error("passengerNotAllowed")
         return false;
     }
@@ -123,7 +123,7 @@ const getPedAndVehicle = () => {
  * Check if player is in the given range of the vehicle
  */
 const isPlayerInRangeOfVehicle = () => {
-    if (config.restrictOutsideControlToRange && parseFloat(config.allowedDripRange)) {
+    if (config?.restrictOutsideControlToRange && parseFloat(config?.allowedDripRange)) {
         const pedCoords = GetEntityCoords(ped);
         const vehicleCoords = GetEntityCoords(vehicle);
     
@@ -133,12 +133,12 @@ const isPlayerInRangeOfVehicle = () => {
             Math.pow(pedCoords[2] - vehicleCoords[2], 2)
         );
     
-        return distance <= config.allowedDripRange;
+        return distance <= config?.allowedDripRange;
     }
 
-    if(!parseFloat(config.allowedDripRange)) {
+    if(!parseFloat(config?.allowedDripRange)) {
         error("notAllowedOutsideControlRange", {
-            "range": config.allowedDripRange
+            "range": config?.allowedDripRange
         })
         return true
     }
@@ -248,7 +248,7 @@ const initDripApp = () => {
     }
 
     // Load and fill map of allowed vehicles
-    allowedVehicleModels = config.allowedVehicleModels.map((vehicleModel) => {
+    allowedVehicleModels = config?.allowedVehicleModels.map((vehicleModel) => {
         return GetHashKey(vehicleModel)
     })
 
@@ -257,13 +257,13 @@ const initDripApp = () => {
 
     // Initialize the app
     setImmediate(() => {
-        emit('chat:addSuggestion', `/${config.commandName}`, config.translations.commandHint);
+        emit('chat:addSuggestion', `/${config?.commandName}`, config?.translations.commandHint);
       });
 
     /**
      * Register command to open the Drip App
      */
-    RegisterCommand(config.commandName, (source, args) => { 
+    RegisterCommand(config?.commandName, (source, args) => { 
         if(!getPedAndVehicle()) {
             return false
         }
@@ -326,8 +326,8 @@ const initDripApp = () => {
     })
 
     // App is initialized, send event to client
-    const translation = replaceVariablesInString(config.translations.appInitialized, {
-        "commandName": config.commandName
+    const translation = replaceVariablesInString(config?.translations.appInitialized, {
+        "commandName": config?.commandName
     })
     console.log(translation)
     sendEvent(`success:initialized`, translation)
